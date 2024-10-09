@@ -13,11 +13,12 @@ def read_data():
 
 def clean_data(df):
     # Remove: Change in private inventories, Net exports of goods and services, Addendum:
+    # These are blank throughout the sheet
     df = df.drop(columns='Change in private inventories')
     df = df.drop(columns='Net exports of goods and services')
     df = df.drop(columns='Addendum:')
 
-    # Create a column cobining year and quarter
+    # Create a column combining year and quarter
     df['Year Quarter'] = df['Year'].astype(str) + df['Quarter'].astype(str)
     return df
 
