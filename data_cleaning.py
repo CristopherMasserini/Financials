@@ -26,7 +26,7 @@ def clean_data(df):
 def save_dataframe(df):
     # Plotting done in Tableau at:
     # https://public.tableau.com/app/profile/cristopher.masserini/viz/Financials_17284199840920/Sheet1
-    df.to_csv('Data/GDP_data_cleaned.csv')
+    df.to_csv('Data/GDP_data_cleaned.csv', index=False)
 
 
 if __name__ == '__main__':
