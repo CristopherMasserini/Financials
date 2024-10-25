@@ -20,6 +20,9 @@ def clean_data(df):
 
     # Create a column combining year and quarter
     df['Year Quarter'] = df['Year'].astype(str) + df['Quarter'].astype(str)
+
+    df = df.drop(columns='Year')
+    df = df.drop(columns='Quarter')
     return df
 
 
