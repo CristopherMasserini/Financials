@@ -32,28 +32,46 @@ def save_dataframe(df):
     df.to_csv('Data/GDP_data_cleaned.csv', index=False)
 
 
-def trailing(df, col, quarters=4):
-    # Trailing average of previous 4 quarters
+def trailing_feature(df, col, quarters=4, all_features=False):
+    # Trailing average of previous x quarters
     col_name = f'{col}_average{quarters}quarters'
     col_data = df.loc[:, col]
-    dataNew = {'Year Quarter': df.loc[quarters:, 'Year Quarter'],
-               'GDP': df.loc[quarters:, 'Gross domestic product'],
-               col_name: []}
+    trailing_quarter_averages = []
 
     init_trail_range = list(range(0, quarters))
-    for i in range(0, len(dataNew['Year Quarter'])):
+    for i in range(0, len(df.loc[quarters:, 'Year Quarter'])):
         sum = 0
         for j in init_trail_range:
             sum += col_data[j]
-        dataNew[col_name].append(sum / 4)
+        trailing_quarter_averages.append(sum / 4)
 
         init_trail_range = [x + 1 for x in init_trail_range]
 
-    pd.DataFrame(dataNew).to_csv(f'Data/{col}_trailing{quarters}quarters.csv', index=False)
+    if not all_features:
+        dataNew = {'Year Quarter': df.loc[quarters:, 'Year Quarter'],
+                   'GDP': df.loc[quarters:, 'Gross domestic product'],
+                   'GDP, current dollars': df.loc[quarters:, 'Gross domestic product, current dollars'],
+                   col_name: trailing_quarter_averages}
+        pd.DataFrame(dataNew).to_csv(f'Data/{col}_trailing{quarters}quarters.csv', index=False)
+    else:
+        return col_name, trailing_quarter_averages
+
+
+def trailing_all_features(df, quarters=4):
+    cols = df.columns
+    cols = cols.drop(['Gross domestic product', 'Gross domestic product, current dollars', 'Year Quarter'])
+    dataNew = {'Year Quarter': df.loc[quarters:, 'Year Quarter'],
+               'GDP': df.loc[quarters:, 'Gross domestic product'],
+               'GDP, current dollars': df.loc[quarters:, 'Gross domestic product, current dollars']}
+    for col in cols:
+        averages = trailing_feature(df, col, quarters, True)
+        dataNew['col'] = averages
+
+    pd.DataFrame(dataNew).to_csv(f'Data/AllFeatures_tailing{quarters}quarters.csv', index=False)
 
 
 if __name__ == '__main__':
     data = read_data()
     data = clean_data(data)
-    trailing(data, 'Personal consumption expenditures', 4)
+    trailing_feature(data, 'Personal consumption expenditures', 4)
     # save_dataframe(data)
