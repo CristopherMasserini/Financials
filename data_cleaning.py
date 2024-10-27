@@ -32,27 +32,28 @@ def save_dataframe(df):
     df.to_csv('Data/GDP_data_cleaned.csv', index=False)
 
 
-def trailing(df):
+def trailing(df, col, quarters=4):
     # Trailing average of previous 4 quarters
-    col = 'Personal consumption expenditures'
+    col_name = f'{col}_average{quarters}quarters'
     col_data = df.loc[:, col]
-    dataNew = {'Year Quarter': df.loc[4:, 'Year Quarter'],
-               'GDP': df.loc[4:, 'Gross domestic product'],
-               col: []}
+    dataNew = {'Year Quarter': df.loc[quarters:, 'Year Quarter'],
+               'GDP': df.loc[quarters:, 'Gross domestic product'],
+               col_name: []}
 
-    init_trail_range = [0, 1, 2, 3]
+    init_trail_range = list(range(0, quarters))
     for i in range(0, len(dataNew['Year Quarter'])):
         sum = 0
         for j in init_trail_range:
             sum += col_data[j]
-        dataNew[col].append(sum / 4)
+        dataNew[col_name].append(sum / 4)
 
         init_trail_range = [x + 1 for x in init_trail_range]
 
-    return dataNew
+    pd.DataFrame(dataNew).to_csv(f'Data/{col}_trailing{quarters}quarters.csv', index=False)
 
 
 if __name__ == '__main__':
     data = read_data()
     data = clean_data(data)
-    save_dataframe(data)
+    trailing(data, 'Personal consumption expenditures', 4)
+    # save_dataframe(data)
