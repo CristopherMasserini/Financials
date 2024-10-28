@@ -70,6 +70,15 @@ def trailing_all_features(df, quarters=4):
     pd.DataFrame(dataNew).to_csv(f'Data/AllFeatures_tailing{quarters}quarters.csv', index=False)
 
 
+def remove_non_needed_labels(df):
+    df = df.drop(columns=['Gross domestic product, current dollars', 'Year Quarter'], index=1)
+    return df
+
+
+def normalize_df(df):
+    # Normalize df to mean 0, std 1
+    pass
+
 if __name__ == '__main__':
     data = read_data()
     data = clean_data(data)

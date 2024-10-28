@@ -2,13 +2,14 @@
 File for exploring the data for trends to be used in modeling
 """
 
+import data_cleaning as dc
 import pandas as pd
+import numpy as np
 
 
 def run_correlations(df):
     # Ignore Year, Quarter
     # Use Gross domestic product vs everything else
-    # print(df['Gross domestic product'].corr(df['Personal consumption expenditures']))
     cols = df.columns
     cols = cols.drop(['Gross domestic product', 'Gross domestic product, current dollars', 'Year Quarter'])
     corr_data = {'Feature': [], 'Corr_GDP': [], 'Corr_GDP_CD': []}
@@ -22,6 +23,21 @@ def run_correlations(df):
     pd.DataFrame(corr_data).to_csv('Data/Feature_Correlation.csv', index=False)
 
 
+def drop_low_correlation(dfAll, dfCorr):
+    features = list(dfCorr.loc[:, 'Feature'])
+    corr_gdp = list(dfCorr.loc[:, 'Corr_GDP'])
+    corr_gdp_cd = list(dfCorr.loc[:, 'Corr_GDP_CD'])
+
+    drop_lst = [feature for ind, feature in enumerate(features) if np.abs(corr_gdp[ind]) < 0.5 and np.abs(corr_gdp_cd[ind])]
+    dfAll = dfAll.drop(drop_lst, axis=1)
+    return dfAll
+
+
 if __name__ == '__main__':
     data = pd.read_csv('Data/GDP_data_cleaned.csv')
     run_correlations(data)
+    data_corr = pd.read_csv('Data/Feature_Correlation.csv')
+    df_high_corr_features = drop_low_correlation(data, data_corr)
+    df_high_corr_features = dc.remove_non_needed_labels(df_high_corr_features)
+    df_high_corr_features.to_csv('Data/High_Corr_Features.csv', index=False)
+
