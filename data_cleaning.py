@@ -3,6 +3,8 @@ GDP data can be found: https://bea.gov/itable/national-gdp-and-personal-income
 """
 
 import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 
 def read_data():
@@ -75,9 +77,20 @@ def remove_non_needed_labels(df):
     return df
 
 
-def normalize_df(df):
+def normalize_data(df=None, file_path=''):
     # Normalize df to mean 0, std 1
-    pass
+    if file_path:
+        df = pd.read_csv(file_path)
+
+    scaler = StandardScaler()
+    scaler.fit(df)
+    df[df.columns] = scaler.transform(df)
+
+    if file_path:
+        df.to_csv(f'{file_path[:-4]}_Standardized.csv')
+
+    return df
+
 
 if __name__ == '__main__':
     data = read_data()
