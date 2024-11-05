@@ -73,18 +73,26 @@ def trailing_all_features(df, quarters=4):
 
 
 def remove_non_needed_labels(df):
-    df = df.drop(columns=['Gross domestic product, current dollars', 'Year Quarter'], index=1)
+    df = df.drop(columns=['Gross domestic product, current dollars', 'Year Quarter'])
     return df
 
 
-def normalize_data(df=None, file_path=''):
+def normalize_data(df=None, file_path='', labelName=None):
     # Normalize df to mean 0, std 1
     if file_path:
         df = pd.read_csv(file_path)
 
+    labels = []
+    if labelName:
+        labels = list(df.loc[:, labelName])
+        df = df.drop(columns=[labelName])
+
     scaler = StandardScaler()
     scaler.fit(df)
     df[df.columns] = scaler.transform(df)
+
+    if labelName:
+        df[labelName] = labels
 
     if file_path:
         df.to_csv(f'{file_path[:-4]}_Standardized.csv', index=False)
@@ -107,7 +115,7 @@ def add_labels(df, col):
             labels.append('Strong Growth')
 
     df['Label'] = labels
-    # df = df.drop(columns=[col], index=1)
+    df = df.drop(columns=[col])
 
     return df
 
@@ -119,4 +127,5 @@ if __name__ == '__main__':
     # save_dataframe(data)
     data = pd.read_csv('Data/High_Corr_Features.csv')
     data = add_labels(data, 'Gross domestic product')
-    data.to_csv('Data/High_Corr_Features_Labeled.csv', index=False)
+    data = normalize_data(df=data, labelName='Label')
+    data.to_csv('Data/High_Corr_Features_Labeled_normalized.csv', index=False)
