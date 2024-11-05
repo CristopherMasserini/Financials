@@ -87,13 +87,36 @@ def normalize_data(df=None, file_path=''):
     df[df.columns] = scaler.transform(df)
 
     if file_path:
-        df.to_csv(f'{file_path[:-4]}_Standardized.csv')
+        df.to_csv(f'{file_path[:-4]}_Standardized.csv', index=False)
+
+    return df
+
+
+def add_labels(df, col):
+    vals = list(df.loc[:, col])
+    labels = []
+
+    for val in vals:
+        if val < 0:
+            labels.append('Contraction')
+        elif val == 0:
+            labels.append('Flat')
+        elif 0 < val <= 2:
+            labels.append('Moderate Growth')
+        else:
+            labels.append('Strong Growth')
+
+    df['Label'] = labels
+    # df = df.drop(columns=[col], index=1)
 
     return df
 
 
 if __name__ == '__main__':
-    data = read_data()
-    data = clean_data(data)
-    trailing_feature(data, 'Personal consumption expenditures', 4)
+    # data = read_data()
+    # data = clean_data(data)
+    # trailing_feature(data, 'Personal consumption expenditures', 4)
     # save_dataframe(data)
+    data = pd.read_csv('Data/High_Corr_Features.csv')
+    data = add_labels(data, 'Gross domestic product')
+    data.to_csv('Data/High_Corr_Features_Labeled.csv', index=False)
