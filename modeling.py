@@ -30,7 +30,7 @@ def knn_model(df, label, neighbors=3):
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
 
-    knn = KNeighborsClassifier(n_neighbors=3)
+    knn = KNeighborsClassifier(neighbors)
     knn.fit(X_train, y_train)
 
     y_pred = knn.predict(X_test)
@@ -53,9 +53,14 @@ def best_n(df, label, n_max=10):
 
 
 if __name__ == '__main__':
-    data = pd.read_csv('Data/High_Corr_Features_Labeled_normalized.csv')
-    data_cleaned = keep_columns(data,
-                                ['Personal consumption expenditures', 'Gross private domestic investment'],
-                                'Label')
-    best_n(data_cleaned, 'Label', 10)
-    # knn_model(data_cleaned, 'Label')
+    # data = pd.read_csv('Data/High_Corr_Features_Labeled_normalized.csv')
+    data = pd.read_csv('Data/High_Corr_Features_PCA5.csv')
+
+    # data_cleaned = keep_columns(data,
+    #                             ['Personal consumption expenditures', 'Gross private domestic investment'],
+    #                             'Label')
+
+    # data_cleaned = keep_columns(data, ['comp1', 'comp3'], 'Label')
+
+    # best_n(data_cleaned, 'Label', 10)
+    best_n(data, 'Label', 10)
