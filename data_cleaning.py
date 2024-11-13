@@ -100,13 +100,33 @@ def normalize_data(df=None, file_path='', labelName=None):
     return df
 
 
-def add_labels(df, col):
+def add_labels_coarse(df, col):
     vals = list(df.loc[:, col])
     labels = []
 
     for val in vals:
         if val < 0:
             labels.append('Contraction')
+        elif val == 0:
+            labels.append('Flat')
+        elif val > 0:
+            labels.append('Growth')
+
+    df['Label'] = labels
+    df = df.drop(columns=[col])
+
+    return df
+
+
+def add_labels_fine(df, col):
+    vals = list(df.loc[:, col])
+    labels = []
+
+    for val in vals:
+        if -2 <= val < 0:
+            labels.append('Moderate Contraction')
+        elif val < -2:
+            labels.append('Strong Contraction')
         elif val == 0:
             labels.append('Flat')
         elif 0 < val <= 2:
