@@ -27,7 +27,7 @@ def lasso(df):
 
 def low_variance_filter(df, label, var_threshold=10):
     cols_non_label = [col for col in df.columns if col != label]
-    new_columns = []
+    new_columns = [label]
     for col in cols_non_label:
         column_variance = df.loc[:, col].var()
         if column_variance > var_threshold:
