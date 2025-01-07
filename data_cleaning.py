@@ -146,6 +146,6 @@ if __name__ == '__main__':
     # trailing_feature(data, 'Personal consumption expenditures', 4)
     # save_dataframe(data)
     data = pd.read_csv('Data/High_Corr_Features.csv')
-    data = add_labels(data, 'Gross domestic product')
+    data = add_labels_coarse(data, 'Gross domestic product')
     data = normalize_data(df=data, labelName='Label')
     data.to_csv('Data/High_Corr_Features_Labeled_normalized.csv', index=False)

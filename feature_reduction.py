@@ -25,9 +25,22 @@ def lasso(df):
     pass
 
 
+def low_variance_filter(df, label, var_threshold=10):
+    cols_non_label = [col for col in df.columns if col != label]
+    new_columns = []
+    for col in cols_non_label:
+        column_variance = df.loc[:, col].var()
+        if column_variance > var_threshold:
+            new_columns.append(col)
+
+    return df.loc[:, new_columns]
+
+
 if __name__ == '__main__':
+    comps = 3
+    var_min = 20
     data = pd.read_csv('Data/High_Corr_Features_Labeled.csv')
-    comps = 5
-    # pca(data, 'Label', comps)
-    data_PCA = pca(data, 'Label', comps)
-    data_PCA.to_csv(f'Data/High_Corr_Features_PCA{comps}.csv', index=False)
+
+    data_high_var = low_variance_filter(data, 'Label', var_min)
+    data_PCA = pca(data_high_var, 'Label', comps)
+    data_PCA.to_csv(f'Data/High_Corr_Features_Reduced.csv', index=False)

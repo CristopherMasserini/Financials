@@ -20,6 +20,6 @@ def scatter_plots_all(df, label_column, ignore_columns=None):
 
 
 if __name__ == '__main__':
-    # data = pd.read_csv('Data/High_Corr_Features_Labeled_normalized.csv')
-    data = pd.read_csv('Data/High_Corr_Features_PCA3.csv')
+    data = pd.read_csv('Data/High_Corr_Features_Labeled_normalized.csv')
+    # data = pd.read_csv('Data/High_Corr_Features_PCA3.csv')
     scatter_plots_all(data, 'Label', ignore_columns='Gross domestic product')
