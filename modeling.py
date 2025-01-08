@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
+from sklearn.ensemble import RandomForestClassifier
 
 
 def keep_columns(df, columns_keep, label):
@@ -18,17 +19,24 @@ def keep_columns(df, columns_keep, label):
     return df
 
 
-def knn_model(df, label, neighbors=3):
+def get_train_test(df, label, scale=True):
     X = df.drop(label, axis=1)
     y = df[label]
 
     # Split the data into training and test sets
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-    # Scale the features using StandardScaler
-    scaler = StandardScaler()
-    X_train = scaler.fit_transform(X_train)
-    X_test = scaler.transform(X_test)
+    if scale:
+        # Scale the features using StandardScaler
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
+
+    return X_train, X_test, y_train, y_test
+
+
+def knn_model(df, label, neighbors=3):
+    X_train, X_test, y_train, y_test = get_train_test(df, label)
 
     knn = KNeighborsClassifier(neighbors)
     knn.fit(X_train, y_train)
@@ -52,9 +60,20 @@ def best_n(df, label, n_max=10):
         print(f"{i} neighbors: {accuracy}")
 
 
+def random_forest(df, label):
+    X_train, X_test, y_train, y_test = get_train_test(df, label)
+    model = RandomForestClassifier(n_estimators=100)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+
+    accuracy = accuracy_score(y_test, y_pred)
+    print(accuracy)
+    return accuracy
+
+
 if __name__ == '__main__':
     # data = pd.read_csv('Data/High_Corr_Features_Labeled_normalized.csv')
-    data = pd.read_csv('Data/High_Corr_Features_PCA5.csv')
+    # data = pd.read_csv('Data/High_Corr_Features_PCA5.csv')
 
     # data_cleaned = keep_columns(data,
     #                             ['Personal consumption expenditures', 'Gross private domestic investment'],
@@ -63,4 +82,7 @@ if __name__ == '__main__':
     # data_cleaned = keep_columns(data, ['comp1', 'comp3'], 'Label')
 
     # best_n(data_cleaned, 'Label', 10)
-    best_n(data, 'Label', 10)
+    # best_n(data, 'Label', 10)
+
+    data_rf = pd.read_csv('Data/High_Corr_Features_Reduced.csv')
+    random_forest(data_rf, 'Label')

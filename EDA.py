@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 
-def run_correlations(df):
+def run_correlations_GDP(df):
     # Ignore Year, Quarter
     # Use Gross domestic product vs everything else
     cols = df.columns
@@ -23,7 +23,7 @@ def run_correlations(df):
     pd.DataFrame(corr_data).to_csv('Data/Feature_Correlation.csv', index=False)
 
 
-def drop_low_correlation(dfAll, dfCorr):
+def drop_low_correlation_GDP(dfAll, dfCorr):
     features = list(dfCorr.loc[:, 'Feature'])
     corr_gdp = list(dfCorr.loc[:, 'Corr_GDP'])
     corr_gdp_cd = list(dfCorr.loc[:, 'Corr_GDP_CD'])
@@ -32,12 +32,14 @@ def drop_low_correlation(dfAll, dfCorr):
     dfAll = dfAll.drop(drop_lst, axis=1)
     return dfAll
 
+# Do similar but drop features with high correlation to other features, not just gdp
+
 
 if __name__ == '__main__':
     data = pd.read_csv('Data/GDP_data_cleaned.csv')
-    run_correlations(data)
+    run_correlations_GDP(data)
     data_corr = pd.read_csv('Data/Feature_Correlation.csv')
-    df_high_corr_features = drop_low_correlation(data, data_corr)
+    df_high_corr_features = drop_low_correlation_GDP(data, data_corr)
     df_high_corr_features = dc.remove_non_needed_labels(df_high_corr_features)
     df_high_corr_features.to_csv('Data/High_Corr_Features.csv', index=False)
 

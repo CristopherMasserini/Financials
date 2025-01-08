@@ -43,4 +43,4 @@ if __name__ == '__main__':
 
     data_high_var = low_variance_filter(data, 'Label', var_min)
     data_PCA = pca(data_high_var, 'Label', comps)
-    data_PCA.to_csv(f'Data/High_Corr_Features_Reduced.csv', index=False)
+    data_PCA.to_csv('Data/High_Corr_Features_Reduced.csv', index=False)
