@@ -2,8 +2,9 @@
 File for building out models
 """
 
+from random import randint
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score
@@ -71,18 +72,33 @@ def random_forest(df, label):
     return accuracy
 
 
+def random_forest_hyperparameter_tuning(df, label, attempts):
+    param_dist = {'n_estimators': randint(20, 500),
+                  'max_depth': randint(1, 40)}
+
+    X_train, X_test, y_train, y_test = get_train_test(df, label)
+    model = RandomForestClassifier()
+
+    # Use random search for hyperparameter tuning
+    rand_search = RandomizedSearchCV(model,
+                                     param_distributions=param_dist,
+                                     n_iter=attempts)
+
+    rand_search.fit(X_train, y_train)
+    best_model = rand_search.best_estimator_
+
+    # Best hyperparameters
+    print('Best hyperparameters:', rand_search.best_params_)
+
+
 if __name__ == '__main__':
-    # data = pd.read_csv('Data/High_Corr_Features_Labeled_normalized.csv')
+    # KNN
     # data = pd.read_csv('Data/High_Corr_Features_PCA5.csv')
-
-    # data_cleaned = keep_columns(data,
-    #                             ['Personal consumption expenditures', 'Gross private domestic investment'],
-    #                             'Label')
-
     # data_cleaned = keep_columns(data, ['comp1', 'comp3'], 'Label')
-
+    #
     # best_n(data_cleaned, 'Label', 10)
-    # best_n(data, 'Label', 10)
 
+    # Random Forest
     data_rf = pd.read_csv('Data/High_Corr_Features_Reduced.csv')
-    random_forest(data_rf, 'Label')
+    random_forest_hyperparameter_tuning(data_rf, 'Label', 5)
+    # random_forest(data_rf, 'Label')
