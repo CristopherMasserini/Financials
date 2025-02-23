@@ -8,7 +8,7 @@ from sklearn.preprocessing import StandardScaler
 
 
 def read_data():
-    data = pd.read_csv('Data/GDP_data.csv')
+    data = pd.read_csv('Files/GDP_data.csv')
 
     return data
 
@@ -31,7 +31,7 @@ def clean_data(df):
 def save_dataframe(df):
     # Plotting done in Tableau at:
     # https://public.tableau.com/app/profile/cristopher.masserini/viz/Financials_17284199840920/Sheet1
-    df.to_csv('Data/GDP_data_cleaned.csv', index=False)
+    df.to_csv('Files/GDP_data_cleaned.csv', index=False)
 
 
 def trailing_feature(df, col, quarters=4, all_features=False):
@@ -54,7 +54,7 @@ def trailing_feature(df, col, quarters=4, all_features=False):
                    'GDP': df.loc[quarters:, 'Gross domestic product'],
                    'GDP, current dollars': df.loc[quarters:, 'Gross domestic product, current dollars'],
                    col_name: trailing_quarter_averages}
-        pd.DataFrame(dataNew).to_csv(f'Data/{col}_trailing{quarters}quarters.csv', index=False)
+        pd.DataFrame(dataNew).to_csv(f'Files/{col}_trailing{quarters}quarters.csv', index=False)
     else:
         return col_name, trailing_quarter_averages
 
@@ -69,7 +69,7 @@ def trailing_all_features(df, quarters=4):
         averages = trailing_feature(df, col, quarters, True)
         dataNew['col'] = averages
 
-    pd.DataFrame(dataNew).to_csv(f'Data/AllFeatures_tailing{quarters}quarters.csv', index=False)
+    pd.DataFrame(dataNew).to_csv(f'Files/AllFeatures_tailing{quarters}quarters.csv', index=False)
 
 
 def remove_non_needed_labels(df):
@@ -145,7 +145,7 @@ if __name__ == '__main__':
     # data = clean_data(data)
     # trailing_feature(data, 'Personal consumption expenditures', 4)
     # save_dataframe(data)
-    data = pd.read_csv('Data/High_Corr_Features.csv')
+    data = pd.read_csv('Files/High_Corr_Features.csv')
     data = add_labels_coarse(data, 'Gross domestic product')
     data = normalize_data(df=data, labelName='Label')
-    data.to_csv('Data/High_Corr_Features_Labeled_normalized.csv', index=False)
+    data.to_csv('Files/High_Corr_Features_Labeled_normalized.csv', index=False)

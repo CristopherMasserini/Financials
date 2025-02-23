@@ -39,8 +39,8 @@ def low_variance_filter(df, label, var_threshold=10):
 if __name__ == '__main__':
     comps = 3
     var_min = 20
-    data = pd.read_csv('Data/High_Corr_Features_Labeled.csv')
+    data = pd.read_csv('Files/High_Corr_Features_Labeled.csv')
 
     data_high_var = low_variance_filter(data, 'Label', var_min)
     data_PCA = pca(data_high_var, 'Label', comps)
-    data_PCA.to_csv('Data/High_Corr_Features_Reduced.csv', index=False)
+    data_PCA.to_csv('Files/High_Corr_Features_Reduced.csv', index=False)

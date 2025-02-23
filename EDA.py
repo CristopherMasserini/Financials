@@ -20,7 +20,7 @@ def run_correlations_GDP(df):
         corr_data['Corr_GDP'].append(corr_GDP)
         corr_data['Corr_GDP_CD'].append(corr_GDP_CD)
 
-    pd.DataFrame(corr_data).to_csv('Data/Feature_Correlation.csv', index=False)
+    pd.DataFrame(corr_data).to_csv('Files/Feature_Correlation.csv', index=False)
 
 
 def drop_low_correlation_GDP(dfAll, dfCorr):
@@ -36,10 +36,10 @@ def drop_low_correlation_GDP(dfAll, dfCorr):
 
 
 if __name__ == '__main__':
-    data = pd.read_csv('Data/GDP_data_cleaned.csv')
+    data = pd.read_csv('Files/GDP_data_cleaned.csv')
     run_correlations_GDP(data)
-    data_corr = pd.read_csv('Data/Feature_Correlation.csv')
+    data_corr = pd.read_csv('Files/Feature_Correlation.csv')
     df_high_corr_features = drop_low_correlation_GDP(data, data_corr)
     df_high_corr_features = dc.remove_non_needed_labels(df_high_corr_features)
-    df_high_corr_features.to_csv('Data/High_Corr_Features.csv', index=False)
+    df_high_corr_features.to_csv('Files/High_Corr_Features.csv', index=False)
 

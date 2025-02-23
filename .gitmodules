@@ -1,0 +1,6 @@
+[submodule "Penalized-KNN"]
+	path = Penalized-KNN
+	url = https://github.com/CristopherMasserini/Penalized-KNN.git
+[submodule "PenalizedKNN"]
+	path = PenalizedKNN
+	url = https://github.com/CristopherMasserini/PenalizedKNN.git

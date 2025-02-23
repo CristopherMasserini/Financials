@@ -93,12 +93,12 @@ def random_forest_hyperparameter_tuning(df, label, attempts):
 
 if __name__ == '__main__':
     # KNN
-    # data = pd.read_csv('Data/High_Corr_Features_PCA5.csv')
+    # data = pd.read_csv('Files/High_Corr_Features_PCA5.csv')
     # data_cleaned = keep_columns(data, ['comp1', 'comp3'], 'Label')
     #
     # best_n(data_cleaned, 'Label', 10)
 
     # Random Forest
-    data_rf = pd.read_csv('Data/High_Corr_Features_Reduced.csv')
+    data_rf = pd.read_csv('Files/High_Corr_Features_Reduced.csv')
     random_forest_hyperparameter_tuning(data_rf, 'Label', 5)
     # random_forest(data_rf, 'Label')
